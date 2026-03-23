@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Belum Ada - OTW</title>
+    <style>
+        /* CSS Styling */
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        p.subtext {
+            font-size: 1.2rem;
+            color: #00d2ff;
+            margin-bottom: 40px;
+            opacity: 0.8;
+        }
+
+        .countdown-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .time-box {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            min-width: 100px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .time-box span {
+            display: block;
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+
+        .time-box label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: #00d2ff;
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 2rem; }
+            .time-box { min-width: 70px; padding: 10px; }
+            .time-box span { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Website belum ada, otw</h1>
+        <p class="subtext">Mohon bersabar, Raja lagi ngurus yang laen dulu!</p>
+
+        <div class="countdown-container">
+            <div class="time-box">
+                <span id="days">00</span>
+                <label>Hari</label>
+            </div>
+            <div class="time-box">
+                <span id="hours">00</span>
+                <label>Jam</label>
+            </div>
+            <div class="time-box">
+                <span id="minutes">00</span>
+                <label>Menit</label>
+            </div>
+            <div class="time-box">
+                <span id="seconds">00</span>
+                <label>Detik</label>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tanggal target: 26 Maret 2026 13:00:00 WIB (GMT+7)
+        // Kita gunakan format ISO dengan offset +07:00 agar tepat di zona waktu Jakarta
+        const targetDate = new Date("2026-03-26T13:00:00+07:00").getTime();
+
+        const updateCountdown = setInterval(function() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            // Perhitungan waktu
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Tampilkan ke elemen
+            document.getElementById("days").innerHTML = days.toString().padStart(2, '0');
+            document.getElementById("hours").innerHTML = hours.toString().padStart(2, '0');
+            document.getElementById("minutes").innerHTML = minutes.toString().padStart(2, '0');
+            document.getElementById("seconds").innerHTML = seconds.toString().padStart(2, '0');
+
+            // Jika waktu habis
+            if (distance < 0) {
+                clearInterval(updateCountdown);
+                document.querySelector(".container").innerHTML = "<h1>Website Sudah Meluncur!</h1>";
+            }
+        }, 1000);
+    </script>
+
+</body>
+</html>
