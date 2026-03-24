@@ -3,129 +3,189 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Website Belum Ada - OTW</title>
+    <title>Simply Chat</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsrsasign/10.5.25/jsrsasign-all-min.js"></script>
+    
     <style>
-        /* CSS Styling */
-        body {
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: white;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            text-align: center;
-        }
+        :root { --primary: #005fff; --bg: #f0f2f5; --text: #1c1e21; }
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        body { margin: 0; background: var(--bg); display: flex; height: 100vh; justify-content: center; align-items: center; }
+        
+        #app { width: 100%; max-width: 500px; height: 95vh; background: white; border-radius: 12px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
+        
+        /* LOGIN */
+        #login-screen { margin: auto; padding: 30px; width: 100%; }
+        #login-screen h1 { color: var(--primary); text-align: center; margin-bottom: 30px; text-transform: uppercase; letter-spacing: 2px; }
+        label { font-size: 13px; font-weight: bold; color: #555; text-transform: uppercase; display: block; margin-bottom: 5px; }
+        .caps-input { width: 100%; padding: 14px; margin-bottom: 20px; border: 2px solid #eee; border-radius: 10px; font-size: 16px; outline: none; text-transform: uppercase; }
+        button { width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
 
-        .container {
-            padding: 20px;
-        }
+        /* CHAT */
+        #chat-screen { display: none; flex-direction: column; height: 100%; }
+        header { background: var(--primary); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+        #room-title { text-transform: uppercase; font-weight: bold; font-size: 14px; }
+        
+        #message-list { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; background: #f9f9f9; }
+        .message { max-width: 80%; padding: 10px 14px; border-radius: 15px; font-size: 14px; position: relative; box-shadow: 0 1px 2px rgba(0,0,0,0.1); word-wrap: break-word; }
+        .message.mine { align-self: flex-end; background: var(--primary); color: white; border-bottom-right-radius: 2px; }
+        .message.others { align-self: flex-start; background: white; color: var(--text); border-bottom-left-radius: 2px; border: 1px solid #eee; }
+        .msg-user { font-size: 10px; font-weight: 900; margin-bottom: 3px; display: block; opacity: 0.7; text-transform: uppercase; }
+        
+        /* Multimedia Styling */
+        .chat-image { max-width: 100%; border-radius: 8px; margin-top: 5px; display: block; cursor: pointer; }
+        .file-link { display: flex; align-items: center; gap: 8px; background: rgba(0,0,0,0.05); padding: 8px; border-radius: 8px; text-decoration: none; color: inherit; font-weight: bold; font-size: 12px; margin-top: 5px; }
+        .mine .file-link { background: rgba(255,255,255,0.2); color: white; }
 
-        h1 {
-            font-size: 3rem;
-            margin-bottom: 10px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-
-        p.subtext {
-            font-size: 1.2rem;
-            color: #00d2ff;
-            margin-bottom: 40px;
-            opacity: 0.8;
-        }
-
-        .countdown-container {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .time-box {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            border-radius: 10px;
-            min-width: 100px;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .time-box span {
-            display: block;
-            font-size: 2.5rem;
-            font-weight: bold;
-        }
-
-        .time-box label {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            color: #00d2ff;
-        }
-
-        @media (max-width: 600px) {
-            h1 { font-size: 2rem; }
-            .time-box { min-width: 70px; padding: 10px; }
-            .time-box span { font-size: 1.5rem; }
-        }
+        #input-area { padding: 12px; border-top: 1px solid #eee; display: flex; align-items: center; gap: 8px; background: white; }
+        #message-input { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 25px; outline: none; }
+        
+        .attach-btn { background: #eee; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 20px; display: flex; align-items: center; justify-content: center; color: #555; }
+        .send-btn { background: var(--primary); border: none; color: white; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-weight: bold; }
+        
+        #upload-status { font-size: 10px; color: var(--primary); padding: 0 20px; display: none; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>Website belum ada, otw</h1>
-        <p class="subtext">Mohon bersabar, Raja lagi ngurus yang laen dulu!</p>
-
-        <div class="countdown-container">
-            <div class="time-box">
-                <span id="days">00</span>
-                <label>Hari</label>
-            </div>
-            <div class="time-box">
-                <span id="hours">00</span>
-                <label>Jam</label>
-            </div>
-            <div class="time-box">
-                <span id="minutes">00</span>
-                <label>Menit</label>
-            </div>
-            <div class="time-box">
-                <span id="seconds">00</span>
-                <label>Detik</label>
-            </div>
-        </div>
+<div id="app">
+    <div id="login-screen">
+        <h1>CHAT APP</h1>
+        <label>Nama Lengkap Raja</label>
+        <input type="text" id="room-name" class="caps-input" placeholder="ISI NAMA LENGKAP RAJA" oninput="this.value = this.value.toUpperCase()">
+        <label>Nama Pengguna</label>
+        <input type="text" id="username" class="caps-input" placeholder="MASUKKAN NAMA" oninput="this.value = this.value.toUpperCase()">
+        <button id="join-btn" onclick="gasChat()">Masuk Chat</button>
     </div>
 
-    <script>
-        // Tanggal target: 26 Maret 2026 13:00:00 WIB (GMT+7)
-        // Kita gunakan format ISO dengan offset +07:00 agar tepat di zona waktu Jakarta
-        const targetDate = new Date("2026-03-26T13:00:00+07:00").getTime();
+    <div id="chat-screen">
+        <header>
+            <div id="room-title">RUANGAN</div>
+            <button onclick="location.reload()" style="background:none; border:none; color:white; cursor:pointer; font-size:10px;">KELUAR</button>
+        </header>
+        <div id="message-list"></div>
+        <div id="upload-status">Sedang mengunggah file...</div>
+        <div id="input-area">
+            <!-- Input File Tersembunyi -->
+            <input type="file" id="file-input" style="display:none" onchange="handleFileUpload(this)">
+            <button class="attach-btn" onclick="document.getElementById('file-input').click()">+</button>
+            
+            <input type="text" id="message-input" placeholder="Tulis pesan..." autocomplete="off">
+            <button class="send-btn" onclick="kirimPesan()">></button>
+        </div>
+    </div>
+</div>
 
-        const updateCountdown = setInterval(function() {
-            const now = new Date().getTime();
-            const distance = targetDate - now;
+<script type="module">
+    import { StreamChat } from 'https://cdn.jsdelivr.net/npm/stream-chat@9.37.0/+esm';
 
-            // Perhitungan waktu
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    const API_KEY = 'yxkfdhakn32c';
+    const API_SECRET = '6fx2ej6ud292cgcqzcqfu3rccnecgqsxc6e9tmu4ysud62magsgpqsex5fkabwt3';
 
-            // Tampilkan ke elemen
-            document.getElementById("days").innerHTML = days.toString().padStart(2, '0');
-            document.getElementById("hours").innerHTML = hours.toString().padStart(2, '0');
-            document.getElementById("minutes").innerHTML = minutes.toString().padStart(2, '0');
-            document.getElementById("seconds").innerHTML = seconds.toString().padStart(2, '0');
+    let client, channel, myId;
 
-            // Jika waktu habis
-            if (distance < 0) {
-                clearInterval(updateCountdown);
-                document.querySelector(".container").innerHTML = "<h1>Website Sudah Meluncur!</h1>";
+    function generateToken(uid) {
+        const header = JSON.stringify({ alg: 'HS256', typ: 'JWT' });
+        const payload = JSON.stringify({ user_id: uid, role: 'admin' });
+        return KJUR.jws.JWS.sign("HS256", header, payload, API_SECRET);
+    }
+
+    window.gasChat = async () => {
+        const userVal = document.getElementById('username').value.trim().toUpperCase();
+        const roomVal = document.getElementById('room-name').value.trim().toUpperCase().replace(/\s+/g, '-');
+        if (!userVal || !roomVal) return alert("ISI SEMUA DATA!");
+
+        myId = userVal.replace(/[^A-Z0-9_]/g, '_');
+        try {
+            client = StreamChat.getInstance(API_KEY);
+            await client.connectUser({ id: myId, name: userVal }, generateToken(myId));
+            channel = client.channel('livestream', roomVal, { name: roomVal });
+            const state = await channel.watch();
+
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('chat-screen').style.display = 'flex';
+            document.getElementById('room-title').innerText = roomVal;
+
+            state.messages.forEach(renderMsg);
+            channel.on('message.new', event => renderMsg(event.message));
+        } catch (err) { alert("GAGAL: " + err.message); }
+    };
+
+    function renderMsg(msg) {
+        if (document.getElementById(`msg-${msg.id}`)) return;
+        const list = document.getElementById('message-list');
+        const isMe = msg.user.id === myId;
+        
+        const div = document.createElement('div');
+        div.id = `msg-${msg.id}`;
+        div.className = `message ${isMe ? 'mine' : 'others'}`;
+        
+        let content = `<span class="msg-user">${msg.user.name || msg.user.id}</span>`;
+        if (msg.text) content += `<div>${msg.text}</div>`;
+        
+        // Render Lampiran (Gambar/Dokumen)
+        if (msg.attachments && msg.attachments.length > 0) {
+            msg.attachments.forEach(att => {
+                if (att.type === 'image') {
+                    content += `<img src="${att.image_url}" class="chat-image" onclick="window.open('${att.image_url}')">`;
+                } else if (att.type === 'file') {
+                    content += `<a href="${att.asset_url}" target="_blank" class="file-link">📁 ${att.title || 'Dokumen'}</a>`;
+                }
+            });
+        }
+        
+        div.innerHTML = content;
+        list.appendChild(div);
+        list.scrollTop = list.scrollHeight;
+    }
+
+    // FUNGSI UNGGAH FILE
+    window.handleFileUpload = async (input) => {
+        const file = input.files[0];
+        if (!file) return;
+
+        const status = document.getElementById('upload-status');
+        status.style.display = 'block';
+
+        try {
+            let response;
+            const isImage = file.type.startsWith('image/');
+            
+            if (isImage) {
+                // Upload Gambar
+                response = await channel.sendImage(file);
+                await channel.sendMessage({
+                    attachments: [{ type: 'image', image_url: response.file }]
+                });
+            } else {
+                // Upload Dokumen/File
+                response = await channel.sendFile(file);
+                await channel.sendMessage({
+                    attachments: [{ type: 'file', asset_url: response.file, title: file.name }]
+                });
             }
-        }, 1000);
-    </script>
+        } catch (err) {
+            alert("Gagal mengunggah file: " + err.message);
+        } finally {
+            status.style.display = 'none';
+            input.value = ''; // Reset input file
+        }
+    };
+
+    window.kirimPesan = async () => {
+        const input = document.getElementById('message-input');
+        const text = input.value.trim();
+        if (!text) return;
+        try {
+            await channel.sendMessage({ text });
+            input.value = '';
+        } catch (e) { alert("GAGAL!"); }
+    };
+
+    document.getElementById('message-input').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') window.kirimPesan();
+    });
+</script>
 
 </body>
 </html>
